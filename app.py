@@ -3,13 +3,11 @@ import random
 import string
 
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 import threading
 import requests
-
-
-
 
 def set_interval(func, sec):
     def func_wrapper():
@@ -28,6 +26,17 @@ feedbacks = []
 
 admin_session_cookie = ""
 backdoorCode = "GfghT875TanhuHjmH89Nyu9GB7Y5VT22D2T8589T704VW"
+
+CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+s = Service(CHROMEDRIVER_PATH)
+WINDOW_SIZE = "1920,1080"
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.add_argument('--no-sandbox')
+
+
 
 @app.route('/')
 def index():
@@ -156,11 +165,9 @@ def feedbackview():
         feedbacks.clear()
         return feeds
 
-
-
 def adminCheckFeedback():
     global admin_session_cookie
-    
+
     # will throw errors the first run but be working fine after that
     if(admin_session_cookie == ""):
         r = requests.get("http://127.0.0.1:5000/?backdoor=" + backdoorCode)
@@ -170,19 +177,14 @@ def adminCheckFeedback():
         driver.add_cookie(admin_session_cookie)
         driver.get("http://localhost:5000/feedbackview")
     else:
-        #print("[+] refreshing feedback...")
         driver.add_cookie(admin_session_cookie)
-        #print("[+] driver cookies: " + str(driver.get_cookies()))
         driver.get("http://localhost:5000/feedbackview")
-        
+
 
 
 
 if __name__ == '__main__':
     balances['00000'] = int(1e18)
-    options = Options()
-    options.add_argument('-headless')
-    driver = webdriver.Firefox(options=options)
+    driver = webdriver.Chrome(service=s, options=chrome_options)
     set_interval(adminCheckFeedback, 30)
     app.run(host="127.0.0.1")
-    
