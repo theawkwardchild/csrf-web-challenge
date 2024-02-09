@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+<div id="feedback_c">
+	An admin will check your feedback shortly...
+    <form>
+        <textarea id="feedta" name= "feedback">
+        </textarea>
+        <div id="outersb">
+        <div id="sbbtn" onclick="submitfeedback()">
+            Submit
+         </div>
+        </div>
+    </form>
+    <div id = "submission"></div>
+</div>
+{% endblock %}
