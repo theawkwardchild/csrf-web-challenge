@@ -17,7 +17,7 @@ def set_interval(func, sec):
     t.start()
     return t
 
-
+host = "http://127.0.0.1:5000" # change this depending on deploymnet
 sal = string.ascii_letters+'0123456789'
 balances = {}
 app = Flask(__name__)
@@ -170,15 +170,15 @@ def adminCheckFeedback():
 
     # will throw errors the first run but be working fine after that
     if(admin_session_cookie == ""):
-        r = requests.get("http://127.0.0.1:5000/?backdoor=" + backdoorCode)
+        r = requests.get(host + "/?backdoor=" + backdoorCode)
         admin_session_cookie = r.cookies.get_dict()['session']
         admin_session_cookie={ 'name': 'session', 'value': admin_session_cookie}
-        driver.get("http://127.0.0.1:5000/?backdoor=" + backdoorCode)
+        driver.get(host + "/?backdoor=" + backdoorCode)
         driver.add_cookie(admin_session_cookie)
-        driver.get("http://localhost:5000/feedbackview")
+        driver.get(host + "/feedbackview")
     else:
         driver.add_cookie(admin_session_cookie)
-        driver.get("http://localhost:5000/feedbackview")
+        driver.get(host + "/feedbackview")
 
 
 
